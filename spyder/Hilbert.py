@@ -11,7 +11,7 @@ def Hilbert(n):
 def Cond(A, ord):
     A_inv = np.linalg.inv(A)
     A_norm = np.linalg.norm(A, ord=ord)
-    A_inv_norm = np.linalg.norm(A, ord=ord)
+    A_inv_norm = np.linalg.norm(A_inv, ord=ord)
     cond = A_norm * A_inv_norm
     return cond
 
