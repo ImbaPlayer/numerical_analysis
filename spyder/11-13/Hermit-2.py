@@ -34,6 +34,14 @@ def b_1(x, x_0, x_1):
 def f(x, x_0, x_1, f_0, f_1, f_d_0, f_d_1):
     return f_0 * a_0(x, x_0, x_1) + f_1 * a_1(x, x_0, x_1) + f_d_0 * b_0(x, x_0, x_1) + f_d_1 * b_1(x, x_0, x_1)
 
+def get_d(x_list, y_list):
+    d_result = [0]
+    for i in range(1, len(x_list)):
+        d_result.append((y_list[i] - y_list[i-1])/(x_list[i] - x_list[i-1]))
+    return d_result
+def f_d(x, x_0, x_1, f_0, f_1, index, y_d):
+    return f_0 * a_0(x, x_0, x_1) + f_1 * a_1(x, x_0, x_1) + y_d[index]* b_0(x, x_0, x_1) + y_d[index+1] * b_1(x, x_0, x_1)
+
 # def f_d(i):
     # return y_list[i + 1] - y_list[i]
 
@@ -44,17 +52,28 @@ def Hermit(x, d):
     index = find_x(x, x_list)
     result = f(x, x_list[index], x_list[index+1], y_list[index], y_list[index + 1], d, d)
     return result
+def Hermit_d(x):
+    y_d = get_d(x_list, y_list)
+    for i in range(len(x_list)):
+        if x == np.array(x_list[i]):
+            return y_list[i]
+    index = find_x(x, x_list)
+    result = f_d(x, x_list[index], x_list[index+1], y_list[index], y_list[index + 1], index, y_d)
+    return result
 
 def main():
     x_test = np.linspace(0.9,13.3,125)
     # y_test = Hermit(x_test)
     y_test = [Hermit(i, 0) for i in x_test]
     y_test_1 = [Hermit(i, 1) for i in x_test]
+    y_test_2 = [Hermit_d(i) for i in x_test]
     
-    plt.plot(x_test, y_test, c="g")
-    plt.plot(x_test, y_test_1, c="b")
+    plt.plot(x_test, y_test, c="g", label="d=0")
+    plt.plot(x_test, y_test_1, c="b",label="d=1")
+    plt.plot(x_test, y_test_2, c="y",label="d=k")
     plt.scatter(x_list, y_list,c="r")
     # plt.title("n = {}".format(len(x_list)), fontsize=20)
+    plt.legend()
     plt.show()
 
 
